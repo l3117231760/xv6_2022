@@ -18,18 +18,18 @@ struct cmd {
 };
 // execve 命令
 struct execcmd {
-  int type;
-  char *argv[MAXARGS];  // 参数     个数最多为10
-  char *eargv[MAXARGS]; // 环境变量 最多为10个
+  int type;             // 两个一组
+  char *argv[MAXARGS];  // 参数起始地址     个数最多为10
+  char *eargv[MAXARGS]; // 参数结束地址     最多为10个 
 };
 // 重定向文件
 struct redircmd {
   int type;
   struct cmd *cmd;
-  char *file;
-  char *efile;
+  char *file;  // 文件名起始
+  char *efile; // 文件名结束
   int mode;
-  int fd;
+  int fd;     // stdin or stdout
 };
 // pipe
 struct pipecmd {
