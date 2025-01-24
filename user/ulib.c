@@ -53,7 +53,9 @@ memset(void *dst, int c, uint n)
   }
   return dst;
 }
-
+// 返回字符c在字符串s中的位置， 对s进行剪切到第一个首字符为c的位置
+// 查找成功返回剪切后的字符串 不成功返回 0
+// s 中有无 c
 char*
 strchr(const char *s, char c)
 {
@@ -62,7 +64,9 @@ strchr(const char *s, char c)
       return (char*)s;
   return 0;
 }
-
+// 由标准输入缓冲区中取到数据
+// 取到 '\n' '\r' 停止 
+// 缓冲区有最大长度
 char*
 gets(char *buf, int max)
 {
