@@ -122,7 +122,7 @@ runcmd(struct cmd *cmd)
     wait(0);
     break;
 
-  case BACK:
+  case BACK: // & 
     bcmd = (struct backcmd*)cmd;
     if(fork1() == 0)
       runcmd(bcmd->cmd); 
@@ -203,7 +203,7 @@ execcmd(void)
   cmd->type = EXEC;
   return (struct cmd*)cmd;
 }
-
+// -->
 struct cmd*
 redircmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd)
 {
@@ -219,7 +219,7 @@ redircmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd)
   cmd->fd = fd;
   return (struct cmd*)cmd;
 }
-
+// // <-- -->
 struct cmd*
 pipecmd(struct cmd *left, struct cmd *right)
 {
@@ -232,7 +232,7 @@ pipecmd(struct cmd *left, struct cmd *right)
   cmd->right = right;
   return (struct cmd*)cmd;
 }
-
+// <-- -->
 struct cmd*
 listcmd(struct cmd *left, struct cmd *right)
 {
@@ -245,7 +245,7 @@ listcmd(struct cmd *left, struct cmd *right)
   cmd->right = right;
   return (struct cmd*)cmd;
 }
-
+// -->
 struct cmd*
 backcmd(struct cmd *subcmd)
 {
@@ -322,7 +322,7 @@ gettoken(char **ps, char *es, char **q, char **eq)
   return ret;
 }
 // 1. 去掉 ps 指向字符串 开头的 " \t\r\n\v"（包括空格）
-// 2. s的第一个字符不为toks的任意一个字符且不为'\0'就会返回 true else flase
+// 2. s的第一个字符不为第三个参数(toks)的任意一个字符且不为'\0'就会返回 true else flase
 int
 peek(char **ps, char *es, char *toks)
 {
@@ -375,8 +375,9 @@ struct cmd*
 parseline(char **ps, char *es)
 {
   struct cmd *cmd;
-
-  cmd = parsepipe(ps, es);
+  
+  // ｜ 的优先级高于 ；&  
+  cmd = parsepipe(ps, es); 
   while(peek(ps, es, "&")){
     gettoken(ps, es, 0, 0);
     cmd = backcmd(cmd);
@@ -400,7 +401,7 @@ parsepipe(char **ps, char *es)
   }
   return cmd;
 }
-int i = 0;
+ // 首字母为 "<>"会进入
 struct cmd*
 parseredirs(struct cmd *cmd, char **ps, char *es)
 {
@@ -447,7 +448,7 @@ parseblock(char **ps, char *es)
 
   if(!peek(ps, es, "("))
     panic("parseblock");
-  gettoken(ps, es, 0, 0);
+  gettoken(ps, es, 0, 0); //删除掉(
   cmd = parseline(ps, es);
   if(!peek(ps, es, ")"))
     panic("syntax - missing )");
@@ -464,14 +465,14 @@ parseexec(char **ps, char *es)
   struct execcmd *cmd;
   struct cmd *ret;
   // printf("%s\n",*ps);
-  if(peek(ps, es, "("))
+  if(peek(ps, es, "("))   // 处理括号分组（如 `(ls; echo) | wc`）
     return parseblock(ps, es);
 
   ret = execcmd(); 
   cmd = (struct execcmd*)ret;
   // printf("%s\n",*ps);
   argc = 0;
-  ret = parseredirs(ret, ps, es);
+  ret = parseredirs(ret, ps, es); 
   while(!peek(ps, es, "|)&;")){
     if((tok=gettoken(ps, es, &q, &eq)) == 0)
       break;

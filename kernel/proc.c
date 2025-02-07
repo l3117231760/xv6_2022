@@ -216,6 +216,7 @@ proc_freepagetable(pagetable_t pagetable, uint64 sz)
 }
 
 // a user program that calls exec("/init")
+// riscv64-linux-gnu-objdump -d user/initcode.out
 // assembled from ../user/initcode.S
 // od -t xC ../user/initcode
 uchar initcode[] = {
