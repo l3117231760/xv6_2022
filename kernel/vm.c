@@ -82,6 +82,30 @@ kvminithart()
 //   21..29 -- 9 bits of level-1 index.
 //   12..20 -- 9 bits of level-0 index.
 //    0..11 -- 12 bits of byte offset within the page.
+/*
+
+虚拟地址 (VA)
+  63       39 38       30 29       21 20       12 11        0
++-----------+-----------+-----------+-----------+------------+
+|    0      |  L2 Index |  L1 Index |  L0 Index | Page Offset|
++-----------+-----------+-----------+-----------+------------+
+
+三级页表结构
++-----------+      +-----------+      +-----------+      +-----------+
+| L2 Table  | ---> | L1 Table  | ---> | L0 Table  | ---> | 物理页框  |
++-----------+      +-----------+      +-----------+      +-----------+
+
+pte：
+#define PTE_V (1L << 0) // valid
+#define PTE_R (1L << 1)
+#define PTE_W (1L << 2)
+#define PTE_X (1L << 3)
+#define PTE_U (1L << 4) // user can access
+
+返回值: *pte_t 为最后一级页表的地址 去掉了标志位但是没有加offset
+do: 通过虚拟地址va找到对应的最后一级页表的地址 若alloc=1 没有对应的页面则一直申请返回
+  alloc=0 说明不需要申请页面 只需要找到对应的页表地址即可 返回0缺页
+*/
 pte_t *
 walk(pagetable_t pagetable, uint64 va, int alloc)
 {

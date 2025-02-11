@@ -117,6 +117,7 @@ usertrapret(void)
   w_sstatus(x);
 
   // set S Exception Program Counter to the saved user pc.
+  // first process to run usertrap() will have stored epc = 0
   w_sepc(p->trapframe->epc);
 
   // tell trampoline.S the user page table to switch to.

@@ -1,11 +1,11 @@
 // Saved registers for kernel context switches.
 struct context {
-  uint64 ra;
-  uint64 sp;
+  uint64 ra;  // return address
+  uint64 sp;  // stack pointer
 
   // callee-saved
-  uint64 s0;
-  uint64 s1;
+  uint64 s0;  // fp 栈帧的基址
+  uint64 s1; 
   uint64 s2;
   uint64 s3;
   uint64 s4;

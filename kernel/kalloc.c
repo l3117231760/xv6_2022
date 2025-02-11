@@ -34,7 +34,7 @@ void
 freerange(void *pa_start, void *pa_end)
 {
   char *p;
-  p = (char*)PGROUNDUP((uint64)pa_start);
+  p = (char*)PGROUNDUP((uint64)pa_start); // round up to page boundary ：向上取整 kernel用完最后的一页
   for(; p + PGSIZE <= (char*)pa_end; p += PGSIZE)
     kfree(p);
 }
@@ -43,6 +43,8 @@ freerange(void *pa_start, void *pa_end)
 // which normally should have been returned by a
 // call to kalloc().  (The exception is when
 // initializing the allocator; see kinit above.)
+// must : pa % page size == 0
+// freelist 中只有 pa（地址） pa->next = freelist 头插法
 void
 kfree(void *pa)
 {
