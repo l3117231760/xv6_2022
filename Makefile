@@ -192,6 +192,8 @@ UPROGS=\
 	$U/_pingpang\
 	$U/_primes\
 	$U/_find\
+	$U/_xargs\
+	$U/_xargs1\
 	
 
 	

@@ -83,7 +83,7 @@ int main(int argc,char* argv[])
     if(argc < 3){
         exit(0);
       }
-      printf("find begin\n");
+      // printf("find begin\n");
     find(argv[1],argv[2]);
     exit(0);
 }
