@@ -507,3 +507,29 @@ uint64 sys_trace(void)
 {
   return 0;
 }
+/*
+struct sysinfo {
+  uint64 freemem;   // amount of free memory (bytes)
+  uint64 nproc;     // number of process
+};
+*/
+struct sysinfo {
+  uint64 freemem;   // amount of free memory (bytes)
+  uint64 nproc;     // number of processes
+};
+uint64 sys_sysinfo(void)
+{
+  struct proc *p = myproc();
+  struct sysinfo info;
+  uint64 addr;
+  argaddr(0, &addr);
+  info.freemem = memcount();
+  info.nproc = proccount();
+  // printf("%d %d\n",info.freemem,info.nproc);
+  if(copyout(p->pagetable,addr,(char*)&info,sizeof(info)))
+  {
+    return -1;
+  }
+  return 0;
+}
+
