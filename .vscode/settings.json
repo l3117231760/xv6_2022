@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "sleeplock.h": "c",
+        "types.h": "c"
+    }
+}

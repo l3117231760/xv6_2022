@@ -6,10 +6,14 @@
 
 void ugetpid_test();
 void pgaccess_test();
-
+// pgtbltest
 int
 main(int argc, char *argv[])
 {
+  if(getpid()== ugetpid())
+  {
+    printf("ok\n");
+  }
   ugetpid_test();
   pgaccess_test();
   printf("pgtbltest: all tests succeeded\n");
