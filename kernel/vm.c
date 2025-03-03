@@ -458,7 +458,7 @@ void print_pagetable(pagetable_t pagetable,int level)
       {
         printf(".. .. ..");
       }
-      printf("%d:pte %p pa %p\n",i,pagetable[i],PTE2PA(pte));
+      printf("%d: pte %p pa %p\n",i,pagetable[i],PTE2PA(pte));
       print_pagetable((pagetable_t)PTE2PA(pte),level+1);
       continue;
     }if(pte & PTE_V)
@@ -475,7 +475,7 @@ void print_pagetable(pagetable_t pagetable,int level)
       {
         printf(".. .. ..");
       }
-      printf("%d:pte %p pa %p\n",i,pagetable[i],PTE2PA(pte));
+      printf("%d: pte %p pa %p\n",i,pagetable[i],PTE2PA(pte));
     }   
   }
 }
@@ -485,3 +485,4 @@ void vmprint(pagetable_t pagetable)
   printf("page table %p\n",(uint64)pagetable);
   print_pagetable(pagetable,0);
 }
+
