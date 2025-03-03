@@ -1276,6 +1276,33 @@
       "-fno-pie",
       "-c",
       "-o",
+      "user/alarmtest.o",
+      "user/alarmtest.c"
+    ],
+    "directory": "/home/mao/lmm/xv6-aliyun/xv6_2022",
+    "file": "/home/mao/lmm/xv6-aliyun/xv6_2022/user/alarmtest.c",
+    "output": "/home/mao/lmm/xv6-aliyun/xv6_2022/user/alarmtest.o"
+  },
+  {
+    "arguments": [
+      "/usr/lib/ccache/riscv64-unknown-elf-gcc",
+      "-Wall",
+      "-Werror",
+      "-O",
+      "-fno-omit-frame-pointer",
+      "-ggdb",
+      "-gdwarf-2",
+      "-DSOL_TRAPS",
+      "-DLAB_TRAPS",
+      "-mcmodel=medany",
+      "-ffreestanding",
+      "-fno-common",
+      "-mno-relax",
+      "-I.",
+      "-fno-stack-protector",
+      "-fno-pie",
+      "-c",
+      "-o",
       "user/call.o",
       "user/call.c"
     ],

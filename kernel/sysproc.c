@@ -129,3 +129,37 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64 
+sys_sigalarm(void)
+{
+  // TODO:
+  uint64 my_handler;
+  int limit;
+  argint(0,&limit);
+  argaddr(1,&my_handler);
+  // printf("%d limit \n",limit);
+  // printf("%d handler \n",my_handler);
+  struct proc* p = myproc();
+  if(limit != 0 || my_handler!= 0)
+  {
+    acquire(&p->lock);
+    p->interenable = 1;
+    p->interval = 0;
+    p->timelimit = limit;
+    p->hanler = (void *)my_handler;
+    p->call = 0; 
+    release(&p->lock);
+  }
+  return 0;
+}
+uint64 sys_sigreturn(void)
+{
+  // TODO:
+  struct proc *p = myproc();
+  p->call = 0;
+  acquire(&p->lock);
+  memmove(p->trapframe,&p->save,sizeof(struct trapframe));
+  release(&p->lock);
+  return p->trapframe->a0; // 这里要返回a0的值不能反回0不然会改变a0寄存器改变状态机的状态
+}
