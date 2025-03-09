@@ -75,7 +75,6 @@ thread_schedule(void)
     printf("thread_schedule: no runnable threads\n");
     exit(-1);
   }
-
   if (current_thread != next_thread) {         /* switch threads?  */
     next_thread->state = RUNNING;
     t = current_thread;
@@ -98,7 +97,7 @@ thread_create(void (*func)())
     if (t->state == FREE) break;
   }
   t->context.ra = (uint64)func;
-  t->context.sp = (uint64)t->stack+MAX_THREAD-1;
+  t->context.sp = (uint64)t->stack+STACK_SIZE-1;
   // t->context.s0 = (uint64)t->stack;
   t->state = RUNNABLE;
   // (uint64)t->stack+MAX_THREAD

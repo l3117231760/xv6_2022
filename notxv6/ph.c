@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <pthread.h>
 #include <sys/time.h>
-
+pthread_mutex_t lock_insert;
 #define NBUCKET 5
 #define NKEYS 100000
 
@@ -47,6 +47,7 @@ void put(int key, int value)
     if (e->key == key)
       break;
   }
+  pthread_mutex_lock(&lock_insert);
   if(e){
     // update the existing key.
     e->value = value;
@@ -54,6 +55,8 @@ void put(int key, int value)
     // the new is new.
     insert(key, value, &table[i], table[i]);
   }
+  pthread_mutex_unlock(&lock_insert);
+
 
 }
 
@@ -104,6 +107,7 @@ main(int argc, char *argv[])
   pthread_t *tha;
   void *value;
   double t1, t0;
+  pthread_mutex_init(&lock_insert,NULL);
 
 
   if (argc < 2) {
