@@ -78,7 +78,7 @@ bget(uint dev, uint blockno)
     if(b->refcnt == 0) {
       b->dev = dev;
       b->blockno = blockno;
-      b->valid = 0;
+      b->valid = 0; // 判断页框是新分配还是早就有内容了
       b->refcnt = 1;
       release(&bcache.lock);
       acquiresleep(&b->lock);

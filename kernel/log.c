@@ -39,11 +39,11 @@ struct logheader {
 
 struct log {
   struct spinlock lock;
-  int start;
+  int start;  //磁盘中的日志开始快号，第一个为header，后续为日志快
   int size;
-  int outstanding; // how many FS sys calls are executing.
-  int committing;  // in commit(), please wait.
-  int dev;
+  int outstanding; // how many FS sys calls are executing. 当前并发心态调用数目
+  int committing;  // in commit(), please wait. 记录是否当前处于提交状态
+  int dev;        // 日志所在设备
   struct logheader lh;
 };
 struct log log;

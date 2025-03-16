@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "user.h": "c",
+        "stat.h": "c",
+        "types.h": "c",
+        "fs.h": "c",
+        "future": "c"
+    },
+    "http.noProxy": [
+        "default.exp-tas.com",
+        "*.githubcopilot.com",
+        "copilot-telemetry.githubusercontent.com/telemetry",
+        "*.individual.githubcopilot.com",
+        "*.githubusercontent.com",
+        "*.business.githubcopilot.com",
+        "*.enterprise.githubcopilot.com"
+    ]
+
+}

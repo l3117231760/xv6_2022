@@ -39,7 +39,7 @@ void winode(uint, struct dinode*);
 void rinode(uint inum, struct dinode *ip);
 void rsect(uint sec, void *buf);
 uint ialloc(ushort type);
-void iappend(uint inum, void *p, int n);
+void iappend(uint inum, void *p, int n); // 写入
 void die(const char *);
 
 // convert to riscv byte order
@@ -216,7 +216,7 @@ rsect(uint sec, void *buf)
   if(read(fsfd, buf, BSIZE) != BSIZE)
     die("read");
 }
-
+// ialloc: allocate an inode on disk
 uint
 ialloc(ushort type)
 {
