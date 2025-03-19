@@ -88,7 +88,6 @@ void *
 kalloc(void)
 {
   struct run *r;
-  int time = 0;
   push_off();
   int id  = cpuid();
   acquire(&kmem[id].lock);
@@ -96,16 +95,19 @@ kalloc(void)
   if(r)
   {
     kmem[id].freelist = r->next;
+    release(&kmem[id].lock);
   }
   else
   {
-revolve:    
+    
+    release(&kmem[id].lock);
   for(int i = 0;i < NCPU;i++)
     {
       if(i == id)
       {
         continue;
       }
+
       acquire(&kmem[i].lock);
       int j = 0;
       while (kmem[i].freelist)
@@ -121,26 +123,23 @@ revolve:
         }
       }
       release(&kmem[i].lock);
+
+      acquire(&kmem[id].lock);
       if(kmem[id].freelist)
       {
         r = kmem[id].freelist;
         kmem[id].freelist = kmem[id].freelist->next;
         // printf("revolve :%d\n",i);
+      release(&kmem[id].lock);
         break;
       }
+     release(&kmem[id].lock);
       // printf("%d\n",i);
     }
     // printf("alloc %d\n",id);
   }
-  if(!r)
-  {
-    if(time < 3)
-    {
-      time++;
-      goto revolve;
-    }
-  }
-  release(&kmem[id].lock);
+
+  // release(&kmem[id].lock);
   pop_off();
   if(r)
     memset((char*)r, 5, PGSIZE); // fill with junk
