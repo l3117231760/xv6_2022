@@ -603,6 +603,8 @@ namecmp(const char *s, const char *t)
 
 // Look for a directory entry in a directory.
 // If found, set *poff to byte offset of entry.
+// 在dp路径中寻找文件名为name *noff == index
+// 返回对应文件的inode
 struct inode*
 dirlookup(struct inode *dp, char *name, uint *poff)
 {
@@ -737,7 +739,7 @@ namex(char *path, int nameiparent, char *name)
   }
   return ip;
 }
-
+//  返回path对应的inode
 struct inode*
 namei(char *path)
 {

@@ -55,7 +55,7 @@ struct dinode {
 #define DIRSIZ 14
 
 struct dirent {
-  ushort inum;
+  ushort inum;  
   char name[DIRSIZ];
 };
 

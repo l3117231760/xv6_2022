@@ -247,12 +247,12 @@ create(char *path, short type, short major, short minor)
 {
   struct inode *ip, *dp;
   char name[DIRSIZ];
-
+// 得到path对应的父目录inode，name中存放路径的最后一个元素
   if((dp = nameiparent(path, name)) == 0)
     return 0;
-
+// 锁定父目录inode
   ilock(dp);
-
+  // 查找父目录中是否已经存在同名文件
   if((ip = dirlookup(dp, name, 0)) != 0){
     iunlockput(dp);
     ilock(ip);
@@ -340,7 +340,34 @@ sys_open(void)
     end_op();
     return -1;
   }
-
+//
+    if (ip->type == T_SYMLINK) {
+      if ((omode & O_NOFOLLOW) == 0) {
+          int count = 0;
+          char sympath[MAXPATH];
+          while (1) {
+              if (count >= 10) {
+                  iunlockput(ip);
+                  end_op();
+                  return -1;
+              }
+              if (readi(ip, 0, (uint64)sympath, 0, MAXPATH) != MAXPATH) {
+                  panic("open symlink");
+              }
+              iunlockput(ip);
+              if ((ip = namei(sympath)) == 0) {
+                  end_op();
+                  return -1;
+              }
+              ilock(ip);
+              if (ip->type != T_SYMLINK) {
+                  break;
+              }
+              count++;
+          }
+      }
+    }
+//
   if((f = filealloc()) == 0 || (fd = fdalloc(f)) < 0){
     if(f)
       fileclose(f);
@@ -501,5 +528,29 @@ sys_pipe(void)
     fileclose(wf);
     return -1;
   }
+  return 0;
+}
+uint64 sys_symlink(void)
+{
+  char target[MAXPATH];
+  char path[MAXPATH];
+  struct inode* ip;
+  argstr(0,target,MAXPATH);
+  argstr(1,path,MAXPATH);
+  begin_op();
+  if((ip = namei(path)) == 0) //path对应inode节点不存在
+  {
+    // create a new inode
+    ip = create(path,T_SYMLINK,0,0);
+    iunlock(ip);
+  }
+  ilock(ip);
+  // printf("ip->size:%d\n",ip->size);
+  if (writei(ip, 0, (uint64)target, 0, MAXPATH) != MAXPATH) {
+    panic("symlink");
+  }
+  // printf("ip->nlink:%d\n",ip->nlink);
+  iunlockput(ip);
+  end_op();
   return 0;
 }
